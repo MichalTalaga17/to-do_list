@@ -18,68 +18,68 @@ pokaz_zadania(); //wywołanie funkcji "pokaz_zadania"
 
 dodaj.onclick = ()=>{ //kliknięcie "dodaj"(+)
   let zawartosc = wpisz.value; //pobranie zawartości pola "wpisz"
-  let getLocalStorageData = localStorage.getItem("New Todo"); //stworzenie zmiennej w localStorage
-  if(getLocalStorageData == null){ //if localstorage has no data
-    listArray = []; //create a blank array
+  let pobierz_local_storage = localStorage.getItem("lista_zadań"); //stworzenie zmiennej w localStorage
+  if(pobierz_local_storage == null){ //sprawdza dane w localStorage
+    tablica_zadan = []; //tworzy tablicę
   }else{
-    listArray = JSON.parse(getLocalStorageData);  //transforming json string into a js object
+    tablica_zadan = JSON.parse(pobierz_local_storage);  //parsowanie na obiekt
   }
-  listArray.push(zawartosc); //pushing or adding new value in array
-  localStorage.setItem("New Todo", JSON.stringify(listArray)); //transforming js object into a json string
+  tablica_zadan.push(zawartosc); //dodawanie nowej zawartości
+  localStorage.setItem("lista_zadań", JSON.stringify(tablica_zadan)); //zmiana na string'a
   pokaz_zadania(); //wywołanie funkcji "pokaz_zadania"
-  dodaj.classList.remove("active"); //unactive the add button once the task added
+  dodaj.classList.remove("active"); //dezaktywowanie przycisku dodaj
 }
 
 
 function pokaz_zadania(){
-  let getLocalStorageData = localStorage.getItem("New Todo");
-  if(getLocalStorageData == null){
-    listArray = [];
+  let pobierz_local_storage = localStorage.getItem("lista_zadań");
+  if(pobierz_local_storage == null){
+    tablica_zadan = [];
   }else{
-    listArray = JSON.parse(getLocalStorageData); 
+    tablica_zadan = JSON.parse(pobierz_local_storage); 
   }
   const ilosc_zadan = document.querySelector(".ilosc_zadan");
-  if (listArray.length > 1 && listArray.length < 5) {
-    ilosc_zadan.textContent = "Masz " + listArray.length + " zadania"; //passing the array length in pendingtask
-  } else if (listArray.length == 0) { 
-    ilosc_zadan.textContent = "Nie masz żadnych zadań"; //passing the array length in pendingtask
-  } else if (listArray.length == 1) { 
-    ilosc_zadan.textContent = "Masz 1 zadanie"; //passing the array length in pendingtask
+  if (tablica_zadan.length > 1 && tablica_zadan.length < 5) {
+    ilosc_zadan.textContent = "Masz " + tablica_zadan.length + " zadania"; //wypisuje ilość zadań
+  } else if (tablica_zadan.length == 0) { 
+    ilosc_zadan.textContent = "Nie masz żadnych zadań"; //wypisuje ilość zadań
+  } else if (tablica_zadan.length == 1) { 
+    ilosc_zadan.textContent = "Masz 1 zadanie"; //wypisuje ilość zadań
   } else {
-    ilosc_zadan.textContent = "Masz " + listArray.length + " zadań"; //passing the array length in pendingtask
+    ilosc_zadan.textContent = "Masz " + tablica_zadan.length + " zadań"; //wypisuje ilość zadań
   }
   
-  if(listArray.length > 0){ //if array length is greater than 0
-    usun.classList.add("active"); //active the delete button
+  if(tablica_zadan.length > 0){ //jeśli są zadania
+    usun.classList.add("active"); //aktywuje przycisk usuń
   }else{
-    usun.classList.remove("active"); //unactive the delete button
+    usun.classList.remove("active"); //dezaktywuje przycisk usuń
   }
   let newLiTag = "";
-  listArray.forEach((element, index) => {
-    newLiTag += `<li>${element}<span class="icon" onclick="deleteTask(${index})"><i class="fas fa-trash"></i></span></li>`;
+  tablica_zadan.forEach((element, index) => {
+    newLiTag += `<li>${element}<span class="icon" onclick="usun_zadanie(${index})"><i class="fas fa-trash"></i></span></li>`;
   });
-  lista.innerHTML = newLiTag; //adding new li tag inside ul tag
-  wpisz.value = ""; //once task added leave the input field blank
+  lista.innerHTML = newLiTag; //dodawanie zadania do HTMLa
+  wpisz.value = ""; //wyczyszczenie pola wpisz
 }
 
-// delete task function
-function deleteTask(index){
-  let getLocalStorageData = localStorage.getItem("New Todo");
-  listArray = JSON.parse(getLocalStorageData);
-  listArray.splice(index, 1); //delete or remove the li
-  localStorage.setItem("New Todo", JSON.stringify(listArray));
-  showTasks(); //call the showTasks function
+//funkcja usuń zadanie
+function usun_zadanie(index){
+  let pobierz_local_storage = localStorage.getItem("lista_zadań");
+  tablica_zadan = JSON.parse(pobierz_local_storage);
+  tablica_zadan.splice(index, 1); //usuwa zadanie
+  localStorage.setItem("lista_zadań", JSON.stringify(tablica_zadan));
+  pokaz_zadania(); //wywołuje funkcję pokaz_zadania
 }
 
-// delete all tasks function
+//funkcja wyczyść
 usun.onclick = ()=>{
-  let getLocalStorageData = localStorage.getItem("New Todo"); //getting localstorage
-  if(getLocalStorageData == null){ //if localstorage has no data
-    listArray = []; //create a blank array
+  let pobierz_local_storage = localStorage.getItem("lista_zadań"); //pobieranie z localstorage
+  if(pobierz_local_storage == null){ //sprawdza zawartość localstorage
+    tablica_zadan = []; //czyści tablicę
   }else{
-    listArray = JSON.parse(getLocalStorageData);  //transforming json string into a js object
-    listArray = []; //create a blank array
+    tablica_zadan = JSON.parse(pobierz_local_storage);  //parsowanie na obiekt
+    tablica_zadan = []; //czyści tablicę
   }
-  localStorage.setItem("New Todo", JSON.stringify(listArray)); //set the item in localstorage
-  showTasks(); //call the showTasks function
+  localStorage.setItem("lista_zadań", JSON.stringify(tablica_zadan)); //ustawia nowe(puste) wartości w localstorage
+  pokaz_zadania(); //wywołuje funkcję pokaz_zadania
 }
